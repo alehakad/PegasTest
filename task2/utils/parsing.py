@@ -86,7 +86,7 @@ async def parse_and_send_file(base_link, message: Message):
     async with (aiohttp.ClientSession() as session):
         async with session.get(base_link) as response:
             if response.status != 200:
-                await message.answer("Возникла ошибка: возсожно ссылка неверная")
+                await message.answer("Возникла ошибка: возможно ссылка неверная")
                 return False
             try:
                 file_path = await parse_category(base_link, response, session)
@@ -94,7 +94,7 @@ async def parse_and_send_file(base_link, message: Message):
                     doc = FSInputFile(file_path)
                     await message.answer_document(doc)
                 else:
-                    await message.answer("Что то пошло не так")
+                    await message.answer("Что-то пошло не так")
             except Exception as e:
                 print(e)
 
