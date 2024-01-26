@@ -5,6 +5,10 @@ import logging
 
 
 def retry_on_except(exceptions: Tuple, max_attempts: int = 3):
+    """
+    Decorator to run function max_attempts times if exceptions from exceptions list happen
+    """
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
