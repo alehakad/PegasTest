@@ -8,3 +8,4 @@ def risky_operator(x, y):
 
 if __name__ == "__main__":
     risky_operator(10, 0)
+    # risky_operator(10, 2)
