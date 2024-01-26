@@ -3,8 +3,6 @@ version: '3.8'
 services:
   bot:
     build: .
-    container_name: web
-    command: ./main_bot.py
     depends_on:
       db:
         condition: service_started
@@ -16,7 +14,6 @@ services:
       - .env
   db:
     image: postgres:15-alpine
-    container_name: postgresql
     volumes:
       -  postgres_data:/var/lib/postgresql/data/
     expose:
