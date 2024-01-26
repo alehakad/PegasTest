@@ -5,7 +5,7 @@ from datetime import datetime
 
 import aiofiles
 import aiohttp
-from aiogram.types import Message
+from aiogram.types import FSInputFile, Message
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from aiocsv import AsyncWriter
@@ -31,7 +31,7 @@ async def parse_book(book_html, base_link, writer, session):
     book_p = book_soup.select_one("div.product_main")
     # name
     name = book_p.select_one("h1").text
-    print(f"book name is {name}")
+    # print(f"book name is {name}")
     book_info_row.insert(0, name)
     price = book_p.select_one("p.price_color").text
     book_info_row.append(price)
@@ -42,7 +42,7 @@ async def parse_book(book_html, base_link, writer, session):
     info_table = book_soup.select_one("table")
     for row in info_table.find_all("td"):
         book_info_row.append(row.text)
-    print(f"writing book {name}, {book_info_row}")
+    # print(f"writing book {name}, {book_info_row}")
     await writer.writerow(book_info_row)
 
 
@@ -53,7 +53,7 @@ async def parse_category(base_link, response, session):
         file_path,
         mode="w",
     ) as csvfile:
-        if response.status != "200":
+        if response.status != 200:
             return False
         tasks = []
         html = await response.text()
@@ -88,17 +88,21 @@ async def parse_and_send_file(base_link, message: Message):
             if response.status != 200:
                 await message.answer("Возникла ошибка: возсожно ссылка неверная")
                 return False
-            file_path = await parse_category(base_link, response, session)
-            with open(file_path, "rb") as file:
-                await message.reply_document(
-                    file,
-                    caption="Here is your file.",
-                )
+            try:
+                file_path = await parse_category(base_link, response, session)
+                if file_path:
+                    doc = FSInputFile(file_path)
+                    await message.answer_document(doc)
+                else:
+                    await message.answer("Что то пошло не так")
+            except Exception as e:
+                print(e)
 
 
 if __name__ == "__main__":
-    asyncio.run(
-        parse_category(
-            "https://books.toscrape.com/catalogue/category/books/travel_2/index.html"
-        )
-    )
+    pass
+    # asyncio.run(
+    #     parse_category(
+    #         "https://books.toscrape.com/catalogue/category/books/travel_2/index.html"
+    #     )
+    # )

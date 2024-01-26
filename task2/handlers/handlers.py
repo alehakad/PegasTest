@@ -30,5 +30,5 @@ async def enter_name(message: Message, state: FSMContext):
 @router.message(StateFilter(UserStates.main_menu))
 async def parse_link(message: Message, state: FSMContext):
     parse_link = message.text
-    await message.answer("Ждиде ответа")
-    asyncio.create_task(parsing.parse_category(parse_link, message))
+    await message.answer("Ждите ответа")
+    asyncio.create_task(parsing.parse_and_send_file(parse_link, message))

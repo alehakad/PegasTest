@@ -1,5 +1,5 @@
-from conn import AsyncSession
-from models import User
+from .conn import AsyncSession
+from .models import User
 
 
 async def create_user(user_id, user_name):
